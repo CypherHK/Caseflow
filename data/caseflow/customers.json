@@ -1,0 +1,20 @@
+[
+  {
+    "customer_id": "cust-001",
+    "name": "Acme Retail",
+    "tier": "standard",
+    "preferences": ["回复要简洁", "优先给自助步骤"]
+  },
+  {
+    "customer_id": "cust-002",
+    "name": "Northwind Ops",
+    "tier": "enterprise",
+    "preferences": ["需要明确工单编号", "高风险事项需要主管确认"]
+  },
+  {
+    "customer_id": "cust-003",
+    "name": "Default Customer",
+    "tier": "standard",
+    "preferences": ["需要补齐订单号和联系方式"]
+  }
+]

@@ -1,0 +1,97 @@
+[
+  {
+    "case_id": "demo-faq-policy",
+    "title": "普通商品咨询 / 售后政策咨询",
+    "category": "低风险咨询",
+    "user_query": "我想知道 7 天无理由退换货政策，拆封后还能退吗？",
+    "customer_id": "cust-001",
+    "order_summary": "ORD-1028，小家电，已签收 2 天，订单金额 CNY 269。",
+    "product_summary": "商品为标准零售件，是否可退取决于品类和二次销售状态。",
+    "customer_history_summary": "近 90 天无投诉记录，偏好简洁自助步骤。",
+    "expected_key_nodes": [
+      "Intent Recognition",
+      "Evidence Retrieval",
+      "Action Planning",
+      "Draft Response",
+      "Risk Review",
+      "Result Persistence"
+    ],
+    "expected_signal": "低风险咨询应命中政策/FAQ 证据，生成回复草稿，不进入人工审批。"
+  },
+  {
+    "case_id": "demo-refund-request",
+    "title": "退款申请",
+    "category": "退款审批",
+    "user_query": "订单 ORD-2201 到货后发现商品少件，我要求退款。",
+    "customer_id": "cust-003",
+    "order_summary": "ORD-2201，家居套装，到货后客户反馈少件，订单金额 CNY 368。",
+    "product_summary": "售后需要核对发货明细、客户凭证和退款政策。",
+    "customer_history_summary": "历史上有一次少件补寄记录，但无恶意退款标记。",
+    "expected_key_nodes": [
+      "Intent Recognition",
+      "Evidence Retrieval",
+      "Action Planning",
+      "Draft Response",
+      "Risk Review",
+      "Human Approval"
+    ],
+    "expected_signal": "退款诉求需要政策和订单证据，触发人工审批后才能执行。"
+  },
+  {
+    "case_id": "demo-high-compensation",
+    "title": "高金额补偿诉求",
+    "category": "补偿 / 高风险",
+    "user_query": "你们发错货导致我活动损失，要求补偿 3000 元并马上处理。",
+    "customer_id": "cust-002",
+    "order_summary": "ORD-5099，促销物料，订单金额 CNY 1,860。",
+    "product_summary": "客户要求补偿金额高于单笔订单金额，需要核实损失和责任边界。",
+    "customer_history_summary": "Northwind Ops 为企业级客户，偏好明确工单编号和主管确认。",
+    "expected_key_nodes": [
+      "Intent Recognition",
+      "Evidence Retrieval",
+      "Action Planning",
+      "Draft Response",
+      "Risk Review",
+      "Human Approval"
+    ],
+    "expected_signal": "高金额补偿命中风险规则，风险复核会阻断直接执行并进入人工审批。"
+  },
+  {
+    "case_id": "demo-complaint-escalation",
+    "title": "投诉升级",
+    "category": "投诉 / 主管介入",
+    "user_query": "客服三天都没解决，我要投诉，并要求主管今天联系我。",
+    "customer_id": "cust-002",
+    "order_summary": "ORD-3320，售后处理中，已跨 2 次跟进。",
+    "product_summary": "处理目标是整理事实、安抚客户、判断是否升级主管队列。",
+    "customer_history_summary": "企业客户，同一问题多次跟进，SLA 预期较高。",
+    "expected_key_nodes": [
+      "Intent Recognition",
+      "Evidence Retrieval",
+      "Action Planning",
+      "Draft Response",
+      "Risk Review",
+      "Human Approval"
+    ],
+    "expected_signal": "投诉和主管介入需要人工确认升级口径，不能由模型直接承诺。"
+  },
+  {
+    "case_id": "demo-missing-information",
+    "title": "信息不全",
+    "category": "待补充",
+    "user_query": "我买的东西有问题，你们帮我处理一下。",
+    "customer_id": "cust-003",
+    "order_summary": "未提供订单号，无法定位订单和支付状态。",
+    "product_summary": "未提供商品名、问题类型、截图或错误码。",
+    "customer_history_summary": "默认客户，无可匹配订单线索。",
+    "expected_key_nodes": [
+      "Intent Recognition",
+      "Evidence Retrieval",
+      "Action Planning",
+      "Draft Response",
+      "Risk Review",
+      "Result Persistence"
+    ],
+    "expected_signal": "信息不足时先要求补充订单号、商品和问题细节，不创建工单，不承诺退款。"
+  }
+]

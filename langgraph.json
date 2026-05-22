@@ -1,0 +1,8 @@
+{
+    "python_version": "3.12",
+    "dependencies": ["./src"],
+    "graphs": {
+        "caseflow_agent": "./src/agents/caseflow_agent.py:caseflow_agent"
+    },
+    "env": "./.env"
+}

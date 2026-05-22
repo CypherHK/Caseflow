@@ -1,0 +1,142 @@
+[
+  {
+    "id": "eval-001",
+    "user_query": "我忘记密码了，怎么重置？",
+    "expected_intent": "咨询类",
+    "expected_priority": "low",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["密码", "重置", "账号"],
+    "draft_response_must_include": ["重置密码"],
+    "evaluation_focus": ["classification", "faq_evidence", "draft_response"]
+  },
+  {
+    "id": "eval-002",
+    "user_query": "订单号 #A100 支付成功但服务无法使用，页面报错 E401，有截图",
+    "expected_intent": "异常类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["订单", "错误码", "SOP"],
+    "draft_response_must_include": ["工单"],
+    "evaluation_focus": ["sop_evidence", "ticket_creation"]
+  },
+  {
+    "id": "eval-003",
+    "user_query": "我的订单有问题",
+    "expected_intent": "信息不全待补充类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["订单", "截图"],
+    "draft_response_must_include": ["订单号", "截图"],
+    "evaluation_focus": ["missing_information", "no_premature_action"]
+  },
+  {
+    "id": "eval-004",
+    "user_query": "你们处理太慢了，我要投诉",
+    "expected_intent": "投诉类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["投诉", "升级"],
+    "draft_response_must_include": ["抱歉", "人工"],
+    "evaluation_focus": ["risk_check", "human_approval"]
+  },
+  {
+    "id": "eval-005",
+    "user_query": "客户被重复扣费，要求马上退款",
+    "expected_intent": "退款 / 升级类",
+    "expected_priority": "high",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["退款", "审批", "扣费"],
+    "draft_response_must_include": ["审批"],
+    "evaluation_focus": ["policy_evidence", "refund_approval"]
+  },
+  {
+    "id": "eval-006",
+    "user_query": "企业客户要求主管介入并升级处理账单问题",
+    "expected_intent": "退款 / 升级类",
+    "expected_priority": "high",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["账单", "主管", "升级"],
+    "draft_response_must_include": ["审批"],
+    "evaluation_focus": ["escalation", "ticket_status"]
+  },
+  {
+    "id": "eval-007",
+    "user_query": "订单 #B233 支付成功但服务无法使用，有截图",
+    "expected_intent": "异常类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["订单", "截图", "SOP"],
+    "draft_response_must_include": ["工单"],
+    "evaluation_focus": ["sop_evidence", "ticket_creation", "case_note"]
+  },
+  {
+    "id": "eval-008",
+    "user_query": "客户说服务不满意，还要求账单补偿一个月费用",
+    "expected_intent": "退款 / 升级类",
+    "expected_priority": "high",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["账单", "审批", "投诉"],
+    "draft_response_must_include": ["审批"],
+    "evaluation_focus": ["complaint_risk", "compensation_approval"]
+  },
+  {
+    "id": "eval-009",
+    "user_query": "登录页面打不开，我想知道怎么找回账号",
+    "expected_intent": "咨询类",
+    "expected_priority": "low",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["密码", "登录", "账号"],
+    "draft_response_must_include": ["重置密码", "登录页"],
+    "evaluation_focus": ["classification", "faq_evidence", "draft_response"]
+  },
+  {
+    "id": "eval-010",
+    "user_query": "等了三天没人处理，服务质量太差了，我要投诉",
+    "expected_intent": "投诉类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["投诉", "升级"],
+    "draft_response_must_include": ["抱歉", "人工"],
+    "evaluation_focus": ["risk_check", "human_approval", "complaint_coverage"]
+  },
+  {
+    "id": "eval-011",
+    "user_query": "订单好像有问题，你们能帮我看看吗",
+    "expected_intent": "信息不全待补充类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["订单", "截图"],
+    "draft_response_must_include": ["订单号", "截图"],
+    "evaluation_focus": ["missing_information", "no_premature_action"]
+  },
+  {
+    "id": "eval-012",
+    "user_query": "订单 #C555 一直显示支付成功但服务无法开通，截图显示错误码 #E303",
+    "expected_intent": "异常类",
+    "expected_priority": "medium",
+    "expected_needs_human_approval": false,
+    "expected_evidence_keywords": ["订单", "错误码", "SOP"],
+    "draft_response_must_include": ["工单", "订单号"],
+    "evaluation_focus": ["sop_evidence", "ticket_creation", "abnormal_order_coverage"]
+  },
+  {
+    "id": "eval-013",
+    "user_query": "账单多收了我钱，要求退费并补偿",
+    "expected_intent": "退款 / 升级类",
+    "expected_priority": "high",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["退款", "审批", "账单"],
+    "draft_response_must_include": ["审批", "退款"],
+    "evaluation_focus": ["policy_evidence", "refund_approval", "fee_dispute_coverage"]
+  },
+  {
+    "id": "eval-014",
+    "user_query": "账单金额明显不对，请主管来帮我查一下",
+    "expected_intent": "退款 / 升级类",
+    "expected_priority": "high",
+    "expected_needs_human_approval": true,
+    "expected_evidence_keywords": ["账单", "主管", "升级"],
+    "draft_response_must_include": ["审批", "升级"],
+    "evaluation_focus": ["escalation", "supervisor_coverage", "billing_dispute"]
+  }
+]

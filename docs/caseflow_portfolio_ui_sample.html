@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CaseFlow Agent Portfolio UI Sample</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --surface: oklch(98% 0.006 230);
+      --surface-2: oklch(95.5% 0.008 230);
+      --panel: oklch(99% 0.004 230);
+      --panel-strong: oklch(93% 0.012 230);
+      --text: oklch(22% 0.018 240);
+      --muted: oklch(52% 0.02 240);
+      --line: oklch(86% 0.012 235);
+      --accent: oklch(58% 0.13 225);
+      --accent-soft: oklch(93% 0.035 225);
+      --success: oklch(55% 0.12 155);
+      --success-soft: oklch(93% 0.04 155);
+      --warning: oklch(69% 0.14 80);
+      --warning-soft: oklch(94% 0.052 80);
+      --danger: oklch(56% 0.14 25);
+      --danger-soft: oklch(94% 0.042 25);
+      --skipped: oklch(68% 0.014 250);
+      --shadow: 0 14px 36px oklch(32% 0.025 240 / 9%);
+      --radius: 8px;
+      --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      background: oklch(97.5% 0.006 230);
+    }
+
+    .brand {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      border: 1px solid oklch(74% 0.035 225);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-weight: 780;
+      background: var(--panel);
+      box-shadow: inset 0 -10px 18px oklch(90% 0.02 225 / 55%);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 18px;
+      line-height: 1.2;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .case-pill,
+    .status-pill {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 7px 10px;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .status-pill strong {
+      color: var(--accent);
+      font-weight: 760;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 8px 12px;
+      min-height: 36px;
+      cursor: pointer;
+      transition: background 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out;
+    }
+
+    .btn:hover {
+      border-color: oklch(70% 0.035 230);
+      background: oklch(97% 0.008 230);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn.primary {
+      color: oklch(98% 0.004 230);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn.approve {
+      color: oklch(98% 0.004 230);
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .btn.reject {
+      color: oklch(98% 0.004 230);
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(250px, 320px) minmax(420px, 1fr) minmax(300px, 390px);
+      gap: 16px;
+      padding: 16px;
+      min-height: 0;
+    }
+
+    .column {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      background: oklch(97% 0.006 230);
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 740;
+      color: oklch(31% 0.02 240);
+    }
+
+    .panel-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .case-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .case-button {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px;
+      cursor: pointer;
+      transition: background 160ms ease-out, border-color 160ms ease-out;
+    }
+
+    .case-button:hover,
+    .case-button.active {
+      border-color: oklch(68% 0.06 225);
+      background: var(--accent-soft);
+    }
+
+    .case-button .name {
+      display: block;
+      font-weight: 720;
+      margin-bottom: 4px;
+    }
+
+    .case-button .meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .form-block {
+      padding: 13px 14px;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    textarea,
+    .context-box {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: oklch(98.5% 0.005 230);
+      color: var(--text);
+      padding: 10px;
+      line-height: 1.5;
+    }
+
+    textarea {
+      min-height: 116px;
+      resize: vertical;
+    }
+
+    .context-box {
+      display: grid;
+      gap: 9px;
+    }
+
+    .context-row {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 10px;
+    }
+
+    .context-row span:first-child {
+      color: var(--muted);
+    }
+
+    .graph-panel {
+      min-height: 470px;
+    }
+
+    .graph-wrap {
+      padding: 18px;
+      min-height: 410px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 18px;
+    }
+
+    .graph {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(118px, 1fr));
+      grid-template-rows: repeat(3, minmax(92px, auto));
+      gap: 22px;
+      align-items: center;
+    }
+
+    .graph::before,
+    .graph::after {
+      content: "";
+      position: absolute;
+      inset: 52px 11% auto 11%;
+      height: 1px;
+      background: var(--line);
+      z-index: 0;
+    }
+
+    .graph::after {
+      inset: auto 11% 138px 11%;
+    }
+
+    .node {
+      position: relative;
+      z-index: 1;
+      min-height: 84px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 11px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: transform 160ms ease-out, border-color 160ms ease-out, background 160ms ease-out;
+    }
+
+    .node:hover,
+    .node.selected {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .node .title {
+      font-size: 13px;
+      font-weight: 760;
+      line-height: 1.25;
+    }
+
+    .node .goal {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .node .state {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 720;
+      background: var(--surface-2);
+      color: var(--muted);
+    }
+
+    .node.pending .state {
+      background: var(--surface-2);
+      color: var(--muted);
+    }
+
+    .node.running {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .node.running .state {
+      background: var(--accent);
+      color: oklch(98% 0.004 230);
+    }
+
+    .node.succeeded {
+      border-color: oklch(68% 0.075 155);
+      background: var(--success-soft);
+    }
+
+    .node.succeeded .state {
+      background: var(--success);
+      color: oklch(98% 0.004 230);
+    }
+
+    .node.blocked {
+      border-color: oklch(73% 0.115 80);
+      background: var(--warning-soft);
+    }
+
+    .node.blocked .state {
+      background: var(--warning);
+      color: oklch(24% 0.03 80);
+    }
+
+    .node.failed {
+      border-color: oklch(68% 0.11 25);
+      background: var(--danger-soft);
+    }
+
+    .node.failed .state {
+      background: var(--danger);
+      color: oklch(98% 0.004 230);
+    }
+
+    .node.skipped {
+      border-color: oklch(84% 0.01 250);
+      background: oklch(97% 0.004 250);
+      color: var(--skipped);
+    }
+
+    .node.skipped .state {
+      background: oklch(91% 0.008 250);
+      color: var(--skipped);
+    }
+
+    .risk-node {
+      outline: 2px solid oklch(88% 0.075 80);
+      outline-offset: 2px;
+    }
+
+    .approval-node {
+      outline: 2px solid oklch(86% 0.065 25);
+      outline-offset: 2px;
+    }
+
+    .path-summary {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding-top: 2px;
+    }
+
+    .path-chip {
+      border: 1px solid var(--line);
+      background: oklch(98% 0.006 230);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+    }
+
+    .path-chip.active {
+      color: var(--accent);
+      border-color: oklch(73% 0.05 225);
+      background: var(--accent-soft);
+    }
+
+    .inspector {
+      display: flex;
+      flex-direction: column;
+      min-height: 470px;
+    }
+
+    .inspector-body {
+      padding: 14px;
+      display: grid;
+      gap: 13px;
+    }
+
+    .node-heading {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .node-heading h2 {
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 740;
+      white-space: nowrap;
+    }
+
+    .badge.high {
+      background: var(--warning-soft);
+      color: oklch(43% 0.08 70);
+    }
+
+    .section {
+      display: grid;
+      gap: 6px;
+    }
+
+    .section h3 {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 760;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .section p,
+    .section li {
+      line-height: 1.52;
+      color: oklch(32% 0.018 240);
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 8px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .evidence-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      background: oklch(98% 0.005 230);
+    }
+
+    .evidence-item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+
+    .approval-box {
+      border: 1px solid oklch(80% 0.08 80);
+      border-radius: 8px;
+      background: var(--warning-soft);
+      padding: 11px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .approval-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: minmax(420px, 1.2fr) minmax(320px, 0.8fr);
+      gap: 16px;
+      padding: 0 16px 16px;
+    }
+
+    .timeline {
+      padding: 12px 14px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 88px 120px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline-row:last-child {
+      border-bottom: 0;
+    }
+
+    .timestamp,
+    .event-node {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .resolution {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .resolution-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      background: oklch(98% 0.005 230);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .metric strong {
+      font-size: 13px;
+    }
+
+    @media (max-width: 1160px) {
+      .shell {
+        grid-template-columns: 300px 1fr;
+      }
+
+      .column.right {
+        grid-column: 1 / -1;
+      }
+
+      .footer {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar,
+      .shell,
+      .footer {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .graph {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+      }
+
+      .graph::before,
+      .graph::after {
+        display: none;
+      }
+
+      .timeline-row {
+        grid-template-columns: 1fr;
+      }
+
+      .approval-actions,
+      .resolution-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">CF</div>
+        <div>
+          <h1>CaseFlow Agent</h1>
+          <p class="subtitle">Auditable After-sales Workflow Agent</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="case-pill" id="casePill">当前 case: 高金额补偿诉求</div>
+        <button class="btn primary" id="runButton" type="button">Run</button>
+        <button class="btn" id="resetButton" type="button">Reset</button>
+        <button class="btn" id="replayButton" type="button">Replay</button>
+        <div class="status-pill">运行状态: <strong id="runStatus">awaiting approval</strong></div>
+      </div>
+    </header>
+
+    <section class="shell">
+      <aside class="column">
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Preset Cases</h2>
+            <span class="panel-kicker">Portfolio mode</span>
+          </div>
+          <div class="case-list" id="caseList"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">User Input</h2>
+            <span class="panel-kicker">工单入口</span>
+          </div>
+          <div class="form-block">
+            <label class="label" for="caseInput">客户问题</label>
+            <textarea id="caseInput"></textarea>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Business Context</h2>
+            <span class="panel-kicker">订单 / 用户 / 历史</span>
+          </div>
+          <div class="form-block">
+            <div class="context-box" id="contextBox"></div>
+          </div>
+        </section>
+      </aside>
+
+      <section class="column">
+        <section class="panel graph-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">LangGraph Workflow</h2>
+            <span class="panel-kicker">执行路径与节点状态</span>
+          </div>
+          <div class="graph-wrap">
+            <div class="graph" id="workflowGraph"></div>
+            <div class="path-summary" id="pathSummary"></div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="column right">
+        <section class="panel inspector">
+          <div class="panel-header">
+            <h2 class="panel-title">Node Inspector</h2>
+            <span class="panel-kicker">可审计 trace</span>
+          </div>
+          <div class="inspector-body" id="inspectorBody"></div>
+        </section>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Execution Timeline</h2>
+          <span class="panel-kicker">event stream sample</span>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Final Resolution / Ticket Summary</h2>
+          <span class="panel-kicker">mock execution</span>
+        </div>
+        <div class="resolution" id="resolution"></div>
+      </section>
+    </footer>
+  </main>
+
+  <script>
+    const nodes = [
+      ["intent_recognition", "Intent Recognition", "识别意图、优先级与缺失信息"],
+      ["evidence_retrieval", "Evidence Retrieval", "检索政策、订单、历史案例"],
+      ["action_planning", "Action Planning", "形成处理计划和下一步"],
+      ["draft_response", "Draft Response", "生成客户可读回复草稿"],
+      ["risk_review", "Risk Review", "复核风险与 guardrail", "risk-node"],
+      ["human_approval", "Human Approval", "主管审批高风险动作", "approval-node"],
+      ["ticket_execution", "Ticket Execution", "创建或升级 mock 工单"],
+      ["result_persistence", "Result Persistence", "保存处理记录和摘要"]
+    ];
+
+    const cases = [
+      {
+        id: "faq",
+        name: "普通售后政策咨询",
+        meta: "低风险 / FAQ / no HITL",
+        input: "我想知道 7 天无理由退换货政策，拆封后还能退吗？",
+        context: {
+          "订单": "ORD-1028, 小家电, 已签收 2 天",
+          "用户": "Acme Retail, standard tier",
+          "历史": "近 90 天无投诉记录"
+        },
+        status: "completed",
+        selectedNode: "result_persistence",
+        states: {
+          intent_recognition: "succeeded",
+          evidence_retrieval: "succeeded",
+          action_planning: "succeeded",
+          draft_response: "succeeded",
+          risk_review: "succeeded",
+          human_approval: "skipped",
+          ticket_execution: "skipped",
+          result_persistence: "succeeded"
+        },
+        inspector: {
+          title: "Result Persistence",
+          status: "succeeded",
+          objective: "把低风险咨询处理结果保存为可追踪记录。",
+          input: "咨询类, low priority, 无需人工审批。",
+          output: "生成政策解释草稿，记录 FAQ 依据和客户上下文。",
+          decision: "未命中退款执行、补偿、投诉升级等高风险动作。"
+        },
+        evidence: [
+          ["policy", "售后政策", "拆封商品是否可退取决于品类和二次销售状态。"],
+          ["order", "ORD-1028", "签收 2 天，商品类目为小家电。"]
+        ],
+        risk: [],
+        timeline: [
+          ["10:31:00", "Intent", "识别为咨询类，priority=low。"],
+          ["10:31:01", "Evidence", "命中售后政策和订单签收状态。"],
+          ["10:31:02", "Risk", "未触发人工审批。"],
+          ["10:31:03", "Persist", "保存处理摘要。"]
+        ],
+        resolution: {
+          intent: "咨询类",
+          approval: "not required",
+          ticket: "not created",
+          final: "回复草稿待发送"
+        }
+      },
+      {
+        id: "refund",
+        name: "退款申请",
+        meta: "退款 / policy evidence / HITL",
+        input: "订单 ORD-2201 到货后发现商品少件，我要求退款。",
+        context: {
+          "订单": "ORD-2201, 家居套装, 金额 CNY 368",
+          "用户": "Default Customer, standard tier",
+          "历史": "曾有一次少件补寄记录"
+        },
+        status: "awaiting approval",
+        selectedNode: "human_approval",
+        states: {
+          intent_recognition: "succeeded",
+          evidence_retrieval: "succeeded",
+          action_planning: "succeeded",
+          draft_response: "succeeded",
+          risk_review: "blocked",
+          human_approval: "running",
+          ticket_execution: "pending",
+          result_persistence: "pending"
+        },
+        inspector: {
+          title: "Human Approval",
+          status: "running",
+          objective: "在退款动作执行前等待主管确认。",
+          input: "退款 / 升级类, high priority, 命中退款审批政策。",
+          output: "等待 Approve / Reject / Modify。",
+          decision: "退款申请不能由模型直接执行。"
+        },
+        evidence: [
+          ["policy", "退款审批政策", "退款、账单减免或补偿承诺必须先人工审批。"],
+          ["order", "ORD-2201", "少件问题待核验，订单金额 CNY 368。"],
+          ["history", "CASE-1002", "重复扣费类退款先提交审批工单。"]
+        ],
+        risk: [
+          ["refund", "high", "客户明确要求退款，属于资金相关动作。"]
+        ],
+        timeline: [
+          ["10:36:11", "Intent", "识别为退款 / 升级类。"],
+          ["10:36:12", "Evidence", "检索订单与退款政策。"],
+          ["10:36:14", "Risk", "guardrail 阻断直接执行。"],
+          ["10:36:15", "Approval", "等待人工审批。"]
+        ],
+        resolution: {
+          intent: "退款 / 升级类",
+          approval: "required",
+          ticket: "pending approval",
+          final: "等待主管审批"
+        }
+      },
+      {
+        id: "compensation",
+        name: "高金额补偿诉求",
+        meta: "补偿 / high value / guardrail",
+        input: "你们发错货导致我活动损失，要求补偿 3000 元并马上处理。",
+        context: {
+          "订单": "ORD-5099, 促销物料, 金额 CNY 1,860",
+          "用户": "Northwind Ops, enterprise tier",
+          "历史": "企业客户，SLA 响应要求较高"
+        },
+        status: "awaiting approval",
+        selectedNode: "risk_review",
+        states: {
+          intent_recognition: "succeeded",
+          evidence_retrieval: "succeeded",
+          action_planning: "succeeded",
+          draft_response: "succeeded",
+          risk_review: "blocked",
+          human_approval: "running",
+          ticket_execution: "pending",
+          result_persistence: "pending"
+        },
+        inspector: {
+          title: "Risk Review",
+          status: "blocked",
+          objective: "识别资金补偿、企业客户影响和审批必要性。",
+          input: "客户要求 CNY 3000 补偿，且为 enterprise tier。",
+          output: "设置 approval_required=true，阻断 Ticket Execution。",
+          decision: "补偿金额高于订单金额，涉及资金承诺和企业 SLA。"
+        },
+        evidence: [
+          ["policy", "补偿审批政策", "补偿承诺需主管或财务审批。"],
+          ["order", "ORD-5099", "订单金额 CNY 1,860，客户要求补偿 CNY 3,000。"],
+          ["customer_history", "Northwind Ops", "企业客户，需要明确工单编号和主管确认。"]
+        ],
+        risk: [
+          ["compensation", "high", "补偿金额高，不能直接承诺。"],
+          ["enterprise_sla", "medium", "企业客户影响需记录事实和证据。"]
+        ],
+        timeline: [
+          ["10:40:02", "Intent", "识别为退款 / 升级类。"],
+          ["10:40:03", "Evidence", "命中补偿政策、订单金额和用户等级。"],
+          ["10:40:05", "Draft", "生成谨慎安抚回复和处理计划。"],
+          ["10:40:06", "Risk", "触发 high risk guardrail。"],
+          ["10:40:07", "Approval", "等待主管审批。"]
+        ],
+        resolution: {
+          intent: "退款 / 升级类",
+          approval: "required",
+          ticket: "blocked before approval",
+          final: "建议先核实损失和补偿依据"
+        }
+      },
+      {
+        id: "complaint",
+        name: "投诉升级",
+        meta: "投诉 / supervisor escalation",
+        input: "客服三天都没解决，我要投诉，并要求主管今天联系我。",
+        context: {
+          "订单": "ORD-3320, 售后处理中",
+          "用户": "Northwind Ops, enterprise tier",
+          "历史": "同一问题已跟进 2 次"
+        },
+        status: "awaiting approval",
+        selectedNode: "human_approval",
+        states: {
+          intent_recognition: "succeeded",
+          evidence_retrieval: "succeeded",
+          action_planning: "succeeded",
+          draft_response: "succeeded",
+          risk_review: "blocked",
+          human_approval: "running",
+          ticket_execution: "pending",
+          result_persistence: "pending"
+        },
+        inspector: {
+          title: "Human Approval",
+          status: "running",
+          objective: "审批投诉升级和主管介入动作。",
+          input: "投诉类, high priority, 同一问题多次跟进。",
+          output: "主管选择 Approve / Reject / Modify 后继续。",
+          decision: "投诉升级会影响处理队列和承诺口径，需要人工确认。"
+        },
+        evidence: [
+          ["sop", "投诉升级 SOP", "明确投诉或主管介入时，应整理事实并升级处理。"],
+          ["history", "CASE-1004", "客户投诉响应慢后升级主管并保存记录。"]
+        ],
+        risk: [
+          ["complaint", "high", "客户明确投诉并要求主管介入。"],
+          ["escalation", "high", "主管联系时间属于服务承诺。"]
+        ],
+        timeline: [
+          ["10:45:18", "Intent", "识别为投诉类。"],
+          ["10:45:19", "Evidence", "命中投诉升级 SOP 和历史案例。"],
+          ["10:45:20", "Risk", "触发人工审批。"],
+          ["10:45:21", "Approval", "等待主管确认升级动作。"]
+        ],
+        resolution: {
+          intent: "投诉类",
+          approval: "required",
+          ticket: "pending escalation",
+          final: "等待审批后升级主管队列"
+        }
+      },
+      {
+        id: "missing",
+        name: "信息不全",
+        meta: "补充信息 / no premature action",
+        input: "我买的东西有问题，你们帮我处理一下。",
+        context: {
+          "订单": "未提供",
+          "用户": "Default Customer, standard tier",
+          "历史": "无可匹配订单号"
+        },
+        status: "completed",
+        selectedNode: "draft_response",
+        states: {
+          intent_recognition: "succeeded",
+          evidence_retrieval: "succeeded",
+          action_planning: "succeeded",
+          draft_response: "succeeded",
+          risk_review: "succeeded",
+          human_approval: "skipped",
+          ticket_execution: "skipped",
+          result_persistence: "succeeded"
+        },
+        inspector: {
+          title: "Draft Response",
+          status: "succeeded",
+          objective: "向用户索要订单号、商品信息和问题描述。",
+          input: "缺少订单号、商品名、截图或错误码。",
+          output: "生成补充信息请求，不创建工单，不承诺退款。",
+          decision: "信息不足时，先补齐事实，再进入后续工作流。"
+        },
+        evidence: [
+          ["sop", "异常订单处理 SOP", "先收集订单号、发生时间、截图或错误码。"]
+        ],
+        risk: [],
+        timeline: [
+          ["10:49:30", "Intent", "识别为信息不全待补充类。"],
+          ["10:49:31", "Evidence", "命中异常订单 SOP。"],
+          ["10:49:32", "Draft", "生成补充信息请求。"],
+          ["10:49:33", "Persist", "保存待补充状态。"]
+        ],
+        resolution: {
+          intent: "信息不全待补充类",
+          approval: "not required",
+          ticket: "not created",
+          final: "要求补充订单号、商品和问题细节"
+        }
+      }
+    ];
+
+    let activeCase = cases[2];
+    let selectedNode = activeCase.selectedNode;
+
+    function statusLabel(status) {
+      return {
+        pending: "pending",
+        running: "running",
+        succeeded: "succeeded",
+        blocked: "blocked",
+        failed: "failed",
+        skipped: "skipped"
+      }[status] || status;
+    }
+
+    function renderCases() {
+      const list = document.getElementById("caseList");
+      list.innerHTML = cases.map((item) => `
+        <button class="case-button ${item.id === activeCase.id ? "active" : ""}" data-case="${item.id}" type="button">
+          <span class="name">${item.name}</span>
+          <span class="meta">${item.meta}</span>
+        </button>
+      `).join("");
+      list.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeCase = cases.find((item) => item.id === button.dataset.case);
+          selectedNode = activeCase.selectedNode;
+          render();
+        });
+      });
+    }
+
+    function renderContext() {
+      document.getElementById("casePill").textContent = `当前 case: ${activeCase.name}`;
+      document.getElementById("runStatus").textContent = activeCase.status;
+      document.getElementById("caseInput").value = activeCase.input;
+      document.getElementById("contextBox").innerHTML = Object.entries(activeCase.context)
+        .map(([key, value]) => `<div class="context-row"><span>${key}</span><strong>${value}</strong></div>`)
+        .join("");
+    }
+
+    function renderGraph() {
+      const graph = document.getElementById("workflowGraph");
+      graph.innerHTML = nodes.map(([id, title, goal, extraClass = ""]) => {
+        const status = activeCase.states[id] || "pending";
+        return `
+          <button class="node ${status} ${extraClass} ${selectedNode === id ? "selected" : ""}" data-node="${id}" type="button">
+            <span>
+              <span class="title">${title}</span>
+              <span class="goal">${goal}</span>
+            </span>
+            <span class="state">${statusLabel(status)}</span>
+          </button>
+        `;
+      }).join("");
+      graph.querySelectorAll(".node").forEach((button) => {
+        button.addEventListener("click", () => {
+          selectedNode = button.dataset.node;
+          renderGraph();
+          renderInspector();
+        });
+      });
+
+      const summary = document.getElementById("pathSummary");
+      summary.innerHTML = nodes.map(([id, title]) => {
+        const status = activeCase.states[id] || "pending";
+        const active = ["succeeded", "running", "blocked"].includes(status);
+        return `<span class="path-chip ${active ? "active" : ""}">${title}</span>`;
+      }).join("");
+    }
+
+    function selectedNodeDetail() {
+      const fallback = nodes.find(([id]) => id === selectedNode);
+      const title = fallback ? fallback[1] : activeCase.inspector.title;
+      if (selectedNode === activeCase.selectedNode) {
+        return activeCase.inspector;
+      }
+      const status = activeCase.states[selectedNode] || "pending";
+      return {
+        title,
+        status,
+        objective: fallback ? fallback[2] : "查看节点业务状态。",
+        input: "该节点的输入会从上游事件和 case context 汇总。",
+        output: status === "pending" ? "尚未执行。" : "输出摘要保留在 timeline 和 final payload 中。",
+        decision: status === "skipped" ? "当前分支未经过该节点。" : "节点详情可由后端 event schema 填充。"
+      };
+    }
+
+    function renderInspector() {
+      const detail = selectedNodeDetail();
+      const riskHtml = activeCase.risk.length
+        ? `<ul>${activeCase.risk.map(([type, severity, reason]) => `<li><strong>${type} / ${severity}</strong>: ${reason}</li>`).join("")}</ul>`
+        : "<p>未命中高风险规则。</p>";
+      const evidenceHtml = activeCase.evidence.map(([source, title, snippet]) => `
+        <li class="evidence-item">
+          <strong>${source}: ${title}</strong>
+          <span>${snippet}</span>
+        </li>
+      `).join("");
+      const approvalHtml = activeCase.resolution.approval === "required" ? `
+        <div class="approval-box">
+          <div>
+            <strong>审批动作</strong>
+            <p>Agent 建议先保留证据和回复草稿，审批后再执行工单或升级。</p>
+          </div>
+          <div class="approval-actions">
+            <button class="btn approve" type="button">Approve</button>
+            <button class="btn reject" type="button">Reject</button>
+            <button class="btn" type="button">Modify</button>
+          </div>
+        </div>
+      ` : "";
+
+      document.getElementById("inspectorBody").innerHTML = `
+        <div class="node-heading">
+          <h2>${detail.title}</h2>
+          <span class="badge ${activeCase.risk.length ? "high" : ""}">${detail.status}</span>
+        </div>
+        <div class="section">
+          <h3>Node Goal</h3>
+          <p>${detail.objective}</p>
+        </div>
+        <div class="section">
+          <h3>Input Summary</h3>
+          <p>${detail.input}</p>
+        </div>
+        <div class="section">
+          <h3>Output Summary</h3>
+          <p>${detail.output}</p>
+        </div>
+        <div class="section">
+          <h3>Decision Basis</h3>
+          <p>${detail.decision}</p>
+        </div>
+        <div class="section">
+          <h3>Evidence</h3>
+          <ul class="evidence-list">${evidenceHtml}</ul>
+        </div>
+        <div class="section">
+          <h3>Risk Flags</h3>
+          ${riskHtml}
+        </div>
+        ${approvalHtml}
+      `;
+    }
+
+    function renderTimeline() {
+      document.getElementById("timeline").innerHTML = activeCase.timeline.map(([time, node, text]) => `
+        <div class="timeline-row">
+          <span class="timestamp">${time}</span>
+          <span class="event-node">${node}</span>
+          <span>${text}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderResolution() {
+      const r = activeCase.resolution;
+      document.getElementById("resolution").innerHTML = `
+        <div class="resolution-grid">
+          <div class="metric"><span>Intent</span><strong>${r.intent}</strong></div>
+          <div class="metric"><span>Approval</span><strong>${r.approval}</strong></div>
+          <div class="metric"><span>Ticket</span><strong>${r.ticket}</strong></div>
+          <div class="metric"><span>Final</span><strong>${r.final}</strong></div>
+        </div>
+        <p>该样板只展示 portfolio mode 的信息结构。真实实现中，节点状态和详情来自后端 workflow events，不展示模型隐藏推理链。</p>
+      `;
+    }
+
+    function runAnimation() {
+      const runningOrder = [
+        "intent_recognition",
+        "evidence_retrieval",
+        "action_planning",
+        "draft_response",
+        "risk_review",
+        "human_approval"
+      ];
+      activeCase.states = Object.fromEntries(nodes.map(([id]) => [id, "pending"]));
+      selectedNode = runningOrder[0];
+      render();
+      runningOrder.forEach((id, index) => {
+        setTimeout(() => {
+          runningOrder.slice(0, index).forEach((doneId) => {
+            activeCase.states[doneId] = doneId === "risk_review" && activeCase.risk.length ? "blocked" : "succeeded";
+          });
+          activeCase.states[id] = id === "human_approval" && activeCase.resolution.approval === "required" ? "running" : "succeeded";
+          selectedNode = id;
+          renderGraph();
+          renderInspector();
+        }, 520 * (index + 1));
+      });
+    }
+
+    function render() {
+      renderCases();
+      renderContext();
+      renderGraph();
+      renderInspector();
+      renderTimeline();
+      renderResolution();
+    }
+
+    document.getElementById("runButton").addEventListener("click", runAnimation);
+    document.getElementById("resetButton").addEventListener("click", () => {
+      activeCase = cases[2];
+      selectedNode = activeCase.selectedNode;
+      render();
+    });
+    document.getElementById("replayButton").addEventListener("click", runAnimation);
+
+    render();
+  </script>
+</body>
+</html>
