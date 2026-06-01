@@ -1,12 +1,31 @@
 # CaseFlow Agent
 
-面向电商售后、客服工单和投诉升级场景的可审计 Agent workflow demo。
+[![CI](https://github.com/CypherHK/Caseflow/actions/workflows/ci.yml/badge.svg)](https://github.com/CypherHK/Caseflow/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+CaseFlow is an open-source reference implementation for auditable, human-in-the-loop AI agent workflows in customer support and after-sales operations.
+
+面向电商售后、客服工单和投诉升级场景的可审计 Agent workflow 参考实现。
 
 CaseFlow 不把客服问题当成一次普通聊天，而是把它放进一条可追踪的业务流程：识别意图、检索证据、规划动作、生成回复、复核风险、人工审批、执行模拟工单，并持久化最终结果。
 
 > English summary: CaseFlow Agent is an auditable after-sales workflow agent prototype built with LangGraph, FastAPI, and Streamlit. It demonstrates evidence-grounded decisions, deterministic guardrails, human-in-the-loop approval, and traceable ticket outcomes.
 
 ![CaseFlow workflow approval](docs/assets/caseflow-workflow-approval.png)
+
+## Open-source maintainer focus
+
+CaseFlow is maintained as a reusable template for developers building safer business-facing AI agents. The repository focuses on workflow contracts, evidence-grounded decisions, deterministic guardrails, HITL approval, mock ticket actions, and regression evals instead of private production integrations.
+
+Useful contribution areas include:
+
+- workflow event schema checks and trace compatibility;
+- deterministic eval coverage for support and escalation scenarios;
+- guardrail failure analysis and safer approval paths;
+- local mock data, runbooks, and reproducible demo snapshots;
+- CI, release readiness, and maintainer automation.
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), and [`ROADMAP.md`](ROADMAP.md) for the maintenance workflow.
 
 ## 核心看点
 
@@ -171,7 +190,7 @@ flowchart LR
 ```sh
 uv run python -m ruff check src tests scripts
 uv run python -m pytest -q
-uv run python scripts/evaluate_caseflow.py
+USE_FAKE_MODEL=true DEFAULT_MODEL=fake OPENAI_API_KEY=test-openai-key uv run python scripts/evaluate_caseflow.py
 ```
 
 当前测试覆盖包括：

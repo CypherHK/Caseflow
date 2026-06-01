@@ -1,7 +1,7 @@
 [project]
 name = "caseflow-agent"
 version = "0.1.0"
-description = "Portfolio-grade customer support agent workflow prototype built with LangGraph, FastAPI and Streamlit"
+description = "Open-source reference implementation for auditable customer support agent workflows built with LangGraph, FastAPI and Streamlit"
 readme = "README.md"
 authors = [{ name = "CypherHK" }]
 classifiers = [
